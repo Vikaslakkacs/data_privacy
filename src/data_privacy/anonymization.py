@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from operator import itemgetter
-from data_privacy.utils.utils import load_document
+from src.data_privacy.utils.utils import load_document
 ### anonymization libraries
 from faker import Faker
 from presidio_analyzer import Pattern, PatternRecognizer
@@ -21,7 +21,7 @@ from langchain_core.runnables import (
 from langchain_openai import ChatOpenAI
 
 ### Anonymization  
-class anonymization:
+class anonymization():
     def __init__(self, doc_path, synthetic_data:bool):
         self.documents= load_document(doc_path)
         self.anonymizer= self._initate_anonymizer(synthetic_data)
