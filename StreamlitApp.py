@@ -15,12 +15,34 @@ with st.form("user_inputs"):
     load_button=st.form_submit_button("anonymize data")
 
 ###Create Chat option for the case uploaded.
-    if load_button is not None:
+    #st.text(load_button)
+    if load_button ==True:
         ##Read the data
-        anonymize=anonymization(upload_file, synthetic_data=True)
-        #anonymize.initate_deanonymize_model()
+
+        scene_text_data= upload_file.read().decode("utf-8")
         st.text("Case:\n\n")
-        st.text(upload_file.read().decode("utf-8"))
+        #st.text(upload_file.read())
+        st.text(scene_text_data)
+        #anonymize=anonymization("/Users/vikaslakka/Desktop/FSDS/GenAI/poc/data_privacy/data_privacy/cases/theft_case.txt", synthetic_data=True)
+        anonymize=anonymization(doc_path=scene_text_data, synthetic_data=True)
+        chain= anonymize.initate_deanonymize_model()
+        response= chain.invoke("who lost the wallet?")
+        st.text(response)
+
 
 
 ### Now we will create changed
+with st.sidebar:
+    st.title("Ask anything about the scene...")
+    messages= st.container(height=400)
+    
+    if question := st.chat_input("Ask anything about the scene..."):
+        messages.chat_message("user").write(question)
+        with st.spinner("Fethcing details..."):
+            try:
+                
+                response= chain.invoke("who lost the wallet?")
+            except Exception as e:
+                traceback.print_exception(type(e), e, e.__traceback__)
+                st.error("Error")
+        
