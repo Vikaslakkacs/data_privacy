@@ -20,9 +20,9 @@ from langchain_core.runnables import (
 )
 from langchain_openai import ChatOpenAI
 
-### Anonymization
+### Anonymization  
 class anonymization:
-    def __init__(self, doc_path:str, synthetic_data:bool):
+    def __init__(self, doc_path, synthetic_data:bool):
         self.documents= load_document(doc_path)
         self.anonymizer= self._initate_anonymizer(synthetic_data)
         load_dotenv()
