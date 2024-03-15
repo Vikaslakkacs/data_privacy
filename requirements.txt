@@ -3,6 +3,7 @@ langchain
 langchain-experimental
 langchain_openai
 presidio-anonymizer
+presidio-analyzer
 faiss-cpu
 spacy
 Faker
