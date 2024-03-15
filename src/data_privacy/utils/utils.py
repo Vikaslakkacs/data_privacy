@@ -11,12 +11,3 @@ def load_document(path) -> list:
     with open(path, 'r') as doc_text:
         document=[Document(page_content= doc_text.read())]
         return document
-
-
-
-#### Return retrivers from document using FAISS
-def FAISS_retriever(path):
-    documents= load_document(path)
-    ## Loop through docs (if there are multiple)
-    for doc in documents:
-        doc.page_content= 
