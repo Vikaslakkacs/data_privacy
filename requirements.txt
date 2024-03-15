@@ -17,4 +17,4 @@ tiktoken
 nemoguardrails
 
 
--e.
+-e .
