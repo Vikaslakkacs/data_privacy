@@ -15,6 +15,7 @@ pinecone-client
 Pypdf
 tiktoken
 nemoguardrails
+en_core_web_lg
 
 
 -e .
