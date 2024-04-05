@@ -15,7 +15,7 @@ pinecone-client
 Pypdf
 tiktoken
 nemoguardrails
-
+chromadb
 
 
 -e .
