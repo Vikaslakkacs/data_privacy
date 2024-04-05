@@ -1,7 +1,7 @@
 import os
 import traceback
 from dotenv import load_dotenv
-from src.data_privacy.anonymization import anonymization
+from data_privacy.anonymization.anonymization import anonymization
 import streamlit as st
 from langchain.callbacks import get_openai_callback
 
@@ -74,8 +74,8 @@ with st.sidebar:
             except Exception as e:
                 traceback.print_exception(type(e), e, e.__traceback__)
                 st.error("Error")
-    
-    for message in st.session_state.messages[2:]:
+    #st.empty()
+    for message in st.session_state.messages:
                         #st.markdown(f"{message['role']} : {message['content']}")
                         messages.chat_message(message['role']).write(f"{message['content']}")
 
