@@ -22,8 +22,7 @@ from langchain_openai import ChatOpenAI
 
 ##Guard rails library
 from nemoguardrails import LLMRails, RailsConfig
-from data_privacy.guardrails.guardrails import guardrails
-import asyncio
+
 ### Anonymization  
 class anonymization():
     def __init__(self, doc_path, synthetic_data:bool):
@@ -70,7 +69,6 @@ class anonymization():
                         Question: {anonymized_question}
                         """
         return template
-    
 
     def initate_anonymize_model(self):
         """Initiate model by defining models, prompts, templates and all the chains.
@@ -80,12 +78,8 @@ class anonymization():
         template= self._template()
         prompt= ChatPromptTemplate.from_template(template= template)
         
-        ##Model defining 
-        ## Initiate from Guardrails
-        #model= ChatOpenAI(temperature=0.3, model_name='gpt-3.5-turbo')
-        guardrails_initiate= guardrails("/Users/vikaslakka/Desktop/FSDS/GenAI/poc/data_privacy/data_privacy/config")
-        rails=guardrails_initiate.initiate_rails()
-        
+        ##Model defining
+        model= ChatOpenAI(temperature=0.3, model_name='gpt-3.5-turbo')
         
         ##Define Runnable parameters
         ##Make sure you anonymize question as well.
@@ -104,21 +98,10 @@ class anonymization():
                'anonymized_question': itemgetter("anonymized_question"),
                }
             |prompt
-            |rails.llm
+            |model
             |StrOutputParser()
         )
-        ## Register anoymize chain into guardrails
-        self.create_guardrails_function(rails, anonymize_chain)
-        
-        #return anonymize_chain
-        return rails
-    
-    def create_guardrails_function(self,rails, anonymize_chain):
-        async def get_guardrails_result(question):
-            return anonymize_chain.invoke(question)
-        
-        ##Register function into Guardrails LLM
-        rails.register_action(get_guardrails_result, name="qa_chain")
+        return anonymize_chain
         
 
     def initate_deanonymize_model(self):
@@ -133,8 +116,8 @@ class anonymization():
 if __name__=="__main__":
     anon= anonymization("/Users/vikaslakka/Desktop/FSDS/GenAI/poc/data_privacy/data_privacy/cases/theft_case.txt",
                         synthetic_data=True)
-    anonymize_chain= anon.initate_anonymize_model()
-    #deanonymize_chain= anon.initate_deanonymize_model()
+    #anonymize_chain= anon.initate_anonymize_model()
+    deanonymize_chain= anon.initate_deanonymize_model()
     
     while True:
         ques= input("Ask about the scene: ")
@@ -142,8 +125,8 @@ if __name__=="__main__":
             break
         else:
             from pprint import pprint
-            print(asyncio.run( anonymize_chain.generate_async(ques)))
+            #print(anonymize_chain.invoke(ques))
             pprint(anon.anonymizer.deanonymizer_mapping)
             print('\n\n\n')
-            #print(deanonymize_chain.invoke(ques))
+            print(deanonymize_chain.invoke(ques))
     
