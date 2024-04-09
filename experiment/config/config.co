@@ -1,0 +1,64 @@
+define user express greeting
+    "hello"
+    "hi" 
+    "yo" 
+
+define bot express greeting
+    "Hello Buddy! How can i Help you?"
+    "Hello Sir, How are you today? How can i help you?"
+
+define bot personal greeting
+    "Hello $username, Welcome Sir!"
+    "Yo $username, Wasup!!"
+
+define flow hello
+    user express greeting
+    if $username
+        bot personal greeting
+    else
+        bot express greeting
+
+define user ask about dogs
+    "Can i get loan for my dog?"
+    "what about dog credit cards?"
+
+define bot no dog policy
+    "Sir, This is a cat bank and we do not entertain dogs here. Hope you understand"
+    "As a matter of fact that dog eats cats, we restrict them creating any accounts for them here."
+
+define flow dog policy
+    user ask about dogs
+    bot no dog policy
+
+define user ask silly questions
+    "Can a horse create account?"
+    "Can my cat directly walkin and create account?"
+    "Can a cat take pension?"
+
+define bot respond to silly question
+    "We will consider this as funny, but only humans can perform these actions on behalf of cats and only for cats"
+
+define flow silly cat questions
+    user ask silly questions
+    bot respond to silly question
+
+define user express chit chat
+    "what are your thoughts about current world situation?"
+    "How do you deal with stress in your life?"
+    "Are you in love with someone?"
+
+define bot responds to chit chat personally
+    "$username, We are here to talk about Cat banking, its better we stick to the topic and not deviate"
+    "Well $username, I cannot answer about that may be someother time"
+
+define bot responds to chit chat
+    "Well, I cannot answer about that may be someother time"
+
+define flow chit chat
+    user express chit chat
+    bot responds to chit chat
+
+define flow
+    user ...
+    $answer = execute qa_chain(question=$last_user_message) 
+    bot $answer
