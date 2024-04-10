@@ -5,6 +5,9 @@ from data_privacy.anonymization.anonymization import anonymization
 import streamlit as st
 from langchain.callbacks import get_openai_callback
 import asyncio
+loop = asyncio.new_event_loop()
+asyncio.set_event_loop(loop)
+
 
 ##Creating Applications
 st.header('Data Security')
@@ -38,19 +41,16 @@ with st.form("user_inputs"):
         ##Create class and method of anonymization
         #anonymize=anonymization("/Users/vikaslakka/Desktop/FSDS/GenAI/poc/data_privacy/data_privacy/cases/theft_case.txt", synthetic_data=True)
         anonymize=anonymization(doc_path=scene_text_data, synthetic_data=True)
-        chain= asyncio.run(anonymize.initate_deanonymize_model())
+        #chain= asyncio.run(anonymize.initiate_deanonymize_model())
+        chain= anonymize.initiate_anonymize_model()
         
-
+        ## Storing the class
+        st.session_state['anonymize']= anonymize
         ##bringing existing object form the class
         st.session_state['anonymized_data']= anonymize.anonymizer.deanonymizer_mapping
         ##Storing the chain method
         st.session_state['chain']= chain
-        
-        #response= chain.invoke("who lost the wallet?")
-        #st.text(response)
-        # question= st.text_input("Who lost the wallet?")
-        #print(question)
-        #question= st.text_input(chain.invoke(question))
+
 
 
 
@@ -65,7 +65,10 @@ with st.sidebar:
         with st.spinner("Fethcing details..."):
             try:
                 
-                response= st.session_state.chain.generate_async(question)
+                response= asyncio.run(st.session_state.chain.generate_async(question)) 
+                ##deanonymize the response 
+                response=  st.session_state.anonymize.initiate_deanonymize_model(response)
+                #print(f"{response} -- Response")
                 #st.write(response)
                 if isinstance(response, str):
                     messages.chat_message("bot").write(f"{response}")
