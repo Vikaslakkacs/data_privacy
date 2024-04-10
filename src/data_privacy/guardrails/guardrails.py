@@ -2,6 +2,9 @@ import os
 from dotenv import load_dotenv
 ### importing guardrail packges
 from nemoguardrails import RailsConfig, LLMRails
+import asyncio 
+loop = asyncio.new_event_loop()
+asyncio.set_event_loop(loop)
 
 class guardrails():
     def __init__(self, config_path):
