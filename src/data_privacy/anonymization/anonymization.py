@@ -72,7 +72,7 @@ class anonymization():
         return template
     
 
-    def initate_anonymize_model(self):
+    def initiate_anonymize_model(self):
         """Initiate model by defining models, prompts, templates and all the chains.
         """
         ##Get the retriever
@@ -83,8 +83,10 @@ class anonymization():
         ##Model defining 
         ## Initiate from Guardrails
         #model= ChatOpenAI(temperature=0.3, model_name='gpt-3.5-turbo')
+        
         guardrails_initiate= guardrails("/Users/vikaslakka/Desktop/FSDS/GenAI/poc/data_privacy/data_privacy/config")
         rails=guardrails_initiate.initiate_rails()
+
         
         
         ##Define Runnable parameters
@@ -121,20 +123,18 @@ class anonymization():
         rails.register_action(get_guardrails_result, name="qa_chain")
         
 
-    def initate_deanonymize_model(self):
-        """We will take existing anonymize chain and append de anonymize to it.
+    def initiate_deanonymize_model(self, response):
+        """We will take response of the chain and de anonymize it.
         """
-        anonymize_chain= self.initate_anonymize_model()
-        deanonymize_chain= anonymize_chain|RunnableLambda(self.anonymizer.deanonymize)
-        return deanonymize_chain
+        return self.anonymizer.deanonymize(response)
     
         
         
 if __name__=="__main__":
     anon= anonymization("/Users/vikaslakka/Desktop/FSDS/GenAI/poc/data_privacy/data_privacy/cases/theft_case.txt",
                         synthetic_data=True)
-    anonymize_chain= anon.initate_anonymize_model()
-    #deanonymize_chain= anon.initate_deanonymize_model()
+    anonymize_chain= anon.initiate_anonymize_model()
+    #deanonymize_chain= anon.initiate_deanonymize_model()
     
     while True:
         ques= input("Ask about the scene: ")
@@ -143,7 +143,8 @@ if __name__=="__main__":
         else:
             from pprint import pprint
             print(asyncio.run( anonymize_chain.generate_async(ques)))
-            pprint(anon.anonymizer.deanonymizer_mapping)
+            #print(asyncio.run( deanonymize_chain.generate_async(ques)))
+            #pprint(anon.anonymizer.deanonymizer_mapping)
             print('\n\n\n')
             #print(deanonymize_chain.invoke(ques))
     
