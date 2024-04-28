@@ -124,7 +124,7 @@ class anonymization():
         
 
     def initiate_deanonymize_model(self, response):
-        """We will take response of the chain and de anonymize it.
+        """We will take response of the chain and de anonymize˝ it.
         """
         return self.anonymizer.deanonymize(response)
     
