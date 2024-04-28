@@ -2,6 +2,9 @@ openai
 langchain
 langchain-experimental
 langchain_openai
+langchainhub
+numexpr
+bs4
 presidio-anonymizer
 presidio-analyzer
 faiss-cpu
